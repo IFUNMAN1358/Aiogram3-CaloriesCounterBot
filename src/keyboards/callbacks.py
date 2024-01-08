@@ -157,11 +157,6 @@ async def callback_insert_meal(call: callback_query, state: FSMContext):
 
 
 
-
-
-
-
-
 @router.callback_query(F.data.startswith('cancel_product'))
 async def callback_cancel_product(call: callback_query, state: FSMContext):
     await state.clear()
@@ -223,6 +218,9 @@ async def callback_calendar_day(call: callback_query, state: FSMContext):
     )
 
     async with session() as db_session:
+        await call.message.delete()
+
+
         result = await db_session.execute(query)
         rows = result.fetchall()
 
@@ -257,8 +255,12 @@ async def callback_calendar_day(call: callback_query, state: FSMContext):
         await call.answer()
 
 
+
 @router.callback_query(F.data.startswith('week'))
 async def callback_calendar_week(call: callback_query, state: FSMContext):
+    await call.message.delete()
+
+
     now = datetime.now()
     start_of_week = now - timedelta(days=now.weekday())
     end_of_week = start_of_week + timedelta(days=6)

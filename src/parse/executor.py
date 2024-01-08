@@ -1,9 +1,9 @@
+import os
 from re import sub
-
 import requests
 import bs4
-from src.database.engine import session
-from src.database.tables import Products
+from src.database.engine import session, engine
+from src.database.tables import Products, Base
 import asyncio
 
 url = 'https://health-diet.ru/table_calorie/?utm_source=leftMenu&utm_medium=table_calorie'
@@ -24,6 +24,10 @@ soup = bs4.BeautifulSoup(src, 'lxml')
 all_products_hrefs = soup.find_all(class_='mzr-tc-group-item-href')
 
 async def process_and_insert_data():
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+
+
     for el in all_products_hrefs:
         url = 'https://health-diet.ru' + el.get('href')
         req = requests.get(url, headers=headers)
@@ -54,6 +58,8 @@ async def process_and_insert_data():
 
                 db.add(product)
                 await db.commit()
+
+    os.remove('site.html')
 
 if __name__ == "__main__":
     asyncio.run(process_and_insert_data())
