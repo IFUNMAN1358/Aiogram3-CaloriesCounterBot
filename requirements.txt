@@ -1,0 +1,7 @@
+asyncpg
+sqlalchemy
+beautifulsoup4
+requests
+lxml
+python-dotenv
+aiogram
