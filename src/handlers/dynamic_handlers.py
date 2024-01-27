@@ -6,7 +6,8 @@ from aiogram.fsm.state import StatesGroup, State
 from aiogram.types import Message
 from src.database.requests import products_from_db, convert_weight_product, meals_from_db, products_user_from_db
 from src.handlers.universal_funcs import text_meal
-from src.keyboards.keyboards import end_keyboard, add_product_keyboard, calendar_keyboard, pagination_keyboard
+from src.keyboards.keyboards import end_keyboard, add_product_keyboard, calendar_keyboard, pagination_keyboard, \
+    keyboard_end
 
 router = Router()
 
@@ -28,14 +29,12 @@ async def add_meal(message: Message, state: FSMContext):
     await state.update_data(list_user_products=list())
     await state.set_state(Meal.GET_NAME_MEAL)
 
-
 @router.message(Meal.GET_NAME_MEAL)
 async def get_name_meal(message: Message, state: FSMContext):
     name = sub(r'[/]', '', message.text)
     await message.answer(f'Название приёма пищи - {name}. Теперь введите продукты. Отправьте "конец", когда закончите.')
     await state.update_data(name=name)
     await state.set_state(Meal.DATA_PRODUCTS)
-
 
 
 @router.message(Meal.DATA_PRODUCTS)
@@ -74,12 +73,14 @@ async def get_weight_product(message: Message, state: FSMContext):
 
         dictionary_result_product = await convert_weight_product(name_product=name_product, weight=weight)
 
+        markup = keyboard_end()
+
         await message.answer(f'Продукт: {dictionary_result_product["product_name"]}\n'
                              f'Вес: {ceil(weight_product)} гр.\n'
                              f'Калории: {dictionary_result_product["calories"]}\n'
                              f'Белки: {dictionary_result_product["proteins"]}\n'
                              f'Жиры: {dictionary_result_product["fats"]}\n'
-                             f'Углеводы: {dictionary_result_product["carbohydrates"]}')
+                             f'Углеводы: {dictionary_result_product["carbohydrates"]}', reply_markup=markup)
 
         list_user_products = data.get('list_user_products', [])
         list_user_products.append({'name_product': name_product,

@@ -26,7 +26,7 @@ def pagination_keyboard(products_list, current_page, type_callback: int):
     func_buttons_row = []
 
     if current_page > 1:
-        func_buttons_row.append(InlineKeyboardButton(text='<', callback_data=f"product:prev_page:{current_page}"))
+        func_buttons_row.append(InlineKeyboardButton(text='<', callback_data=f"page:prev_page:{current_page}"))
     else:
         func_buttons_row.append(InlineKeyboardButton(text='-', callback_data="pass"))
 
@@ -35,7 +35,7 @@ def pagination_keyboard(products_list, current_page, type_callback: int):
         InlineKeyboardButton(text=text, callback_data="pass"))
 
     if end_index < len(products_list):
-        func_buttons_row.append(InlineKeyboardButton(text='>', callback_data=f"product:next_page:{current_page}"))
+        func_buttons_row.append(InlineKeyboardButton(text='>', callback_data=f"page:next_page:{current_page}"))
     else:
         func_buttons_row.append(InlineKeyboardButton(text='-', callback_data="pass"))
 
@@ -54,6 +54,16 @@ def end_keyboard() -> InlineKeyboardMarkup:
 
     end_inline_keyboard = InlineKeyboardMarkup(inline_keyboard=result_list_buttons)
     return end_inline_keyboard
+
+
+def keyboard_end():
+    result_list_buttons = []
+
+    result_list_buttons.append([KeyboardButton(text='конец')])
+
+    button_end = ReplyKeyboardMarkup(keyboard=result_list_buttons, resize_keyboard=True)
+    return button_end
+
 
 
 def add_product_keyboard() -> InlineKeyboardMarkup:

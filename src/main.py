@@ -2,8 +2,7 @@ from aiogram import Bot, Dispatcher
 from asyncio import*
 from os import*
 from dotenv import load_dotenv
-from src.database.engine import engine, session
-from src.database.tables import Base
+from src.database.engine import session
 from src.handlers import static_handlers
 from src.handlers import dynamic_handlers
 from src.keyboards import callbacks

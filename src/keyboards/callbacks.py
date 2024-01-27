@@ -7,8 +7,7 @@ from src.database.engine import session
 from src.database.requests import consumption, delete_meal_from_db, delete_product_from_db
 from src.database.tables import Consumption, Products
 from src.handlers.dynamic_handlers import Meal
-from src.keyboards.keyboards import pagination_keyboard
-
+from src.keyboards.keyboards import pagination_keyboard, start_reply_keyboard
 
 router = Router()
 
@@ -17,7 +16,7 @@ async def pass_func(call: callback_query):
     await call.answer()
 
 
-@router.callback_query(F.data.startswith("product"))
+@router.callback_query(F.data.startswith("page"))
 async def handle_pagination_buttons(call: callback_query, state: FSMContext):
     data = call.data.split(':')
     action = data[1]
@@ -42,7 +41,7 @@ async def handle_pagination_buttons(call: callback_query, state: FSMContext):
     await call.answer()
 
 ########################################################################################################################
-# Two types callbacks for pagination_keyboard
+# Three types callbacks for pagination_keyboard
 
 # type == 1
 @router.callback_query(F.data.startswith('first_type'))
@@ -103,13 +102,15 @@ async def callback_delete_product(call: callback_query, state: FSMContext):
 
 @router.callback_query(F.data.startswith('cancel_meal'))
 async def callback_cancel_meal(call: callback_query, state: FSMContext):
+    markup = start_reply_keyboard()
     await state.clear()
-    await call.message.answer('Приём пищи удалён.')
+    await call.message.answer('Приём пищи удалён.', reply_markup=markup)
     await call.answer()
 
 
 @router.callback_query(F.data.startswith('insert_meal'))
 async def callback_insert_meal(call: callback_query, state: FSMContext):
+    markup = start_reply_keyboard()
     data = await state.get_data()
     user_id = call.from_user.id
     meal_name = data['name']
@@ -146,7 +147,7 @@ async def callback_insert_meal(call: callback_query, state: FSMContext):
             db.add(consumption)
             await db.commit()
         await call.message.delete()
-        await call.message.answer('Приём пищи добавлен.')
+        await call.message.answer('Приём пищи добавлен.', reply_markup=markup)
         await state.clear()
     else:
         await call.message.answer('Список продуктов пуст.')

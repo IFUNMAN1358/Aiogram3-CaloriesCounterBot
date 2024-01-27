@@ -6,6 +6,7 @@ from src.database.engine import session, engine
 from src.database.tables import Products, Base
 import asyncio
 
+
 url = 'https://health-diet.ru/table_calorie/?utm_source=leftMenu&utm_medium=table_calorie'
 
 headers = {'Accept': '*/*',
