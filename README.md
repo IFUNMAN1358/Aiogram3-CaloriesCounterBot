@@ -1,16 +1,14 @@
-**This is a non-commercial telegram bot for calories counter on framework aiogram3+**
-
-Main used tools:
+Основные инструменты:
 * Aiogram3
 * SQLALchemy
 * BeautifulSoup4
 
-Instruction:
+Мануал:
 
-1) Create a file .env in main directory with two variables:
+1) Создайте .env в директории main с двумя переменными:
 * TOKEN=your bot token
 * DB_URL=postgresql+asyncpg://USERNAME:PASSWORD@HOST:PORT/NAME_DB?async_fallback=True
 
-2) Run executor.py in directory 'parse'. Wait.
+2) Запустите executor в директории parse. Подождите завершения работы файла.
 
-3) After starting main the bot will work.
+3) После запуска main бот будет работать.
